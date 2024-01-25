@@ -1,0 +1,43 @@
+<ng-container *ngIf="contentTree">
+  <!-- Main layout -->
+  <div class="rendered-content-tree">
+    <ng-container *ngTemplateOutlet="
+                       layoutTemplate;
+                       context: { content: initialContentTree,hasChildren:hasChildren(initialContentTree.id) }">
+    </ng-container>
+  </div>
+</ng-container>
+
+<ng-template #layoutTemplate
+             let-content="content">
+  <div [ngClass]="!hasChildren(content.id) ? 'empty-container' : 'filled-container'"
+       class="container">
+    <ng-container *ngIf="hasChildren(content.id); else emptyContainer">
+      <ng-container *ngFor="let child of findChildrenTree(content.id)">
+        <ng-container *ngIf="child.type === ContentTreeItemType.Container; else comTmpl">
+          <ng-container *ngTemplateOutlet="
+                       layoutTemplate;
+                       context: { content:child}">
+          </ng-container>
+        </ng-container>
+        <ng-template #comTmpl>
+          <ng-container *ngTemplateOutlet="
+                        componentTemplate;
+                        context: { content: child }">
+          </ng-container>
+        </ng-template>
+      </ng-container>
+    </ng-container>
+    <ng-template #emptyContainer>
+      <a (click)="onAddContainerClick(content.id)">This container is empty.</a>
+    </ng-template>
+  </div>
+</ng-template>
+
+<ng-template #componentTemplate
+             let-content="content"
+             let-parentLayoutId="parentLayoutId">
+  <div #componentContainer
+       [id]="content?.id">
+  </div>
+</ng-template>
