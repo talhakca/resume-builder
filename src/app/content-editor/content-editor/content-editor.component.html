@@ -13,7 +13,7 @@
   <div [ngClass]="!hasChildren(content.id) ? 'empty-container' : 'filled-container'"
        class="container">
     <ng-container *ngIf="hasChildren(content.id); else emptyContainer">
-      <ng-container *ngFor="let child of findChildrenTree(content.id)">
+      <ng-container *ngFor="let child of findChildrenTree(content.id); trackBy: trackBy">
         <ng-container *ngIf="child.type === ContentTreeItemType.Container; else comTmpl">
           <ng-container *ngTemplateOutlet="
                        layoutTemplate;
@@ -29,15 +29,31 @@
       </ng-container>
     </ng-container>
     <ng-template #emptyContainer>
-      <a (click)="onAddContainerClick(content.id)">This container is empty.</a>
+      This container is empty. Click <a (click)="onAddContainerClick(content.id)">here</a> to add container, or click <a
+         (click)="onAddComponentToContainerClick(content.id)">here</a>
+      to add component.
     </ng-template>
   </div>
 </ng-template>
 
 <ng-template #componentTemplate
-             let-content="content"
-             let-parentLayoutId="parentLayoutId">
+             let-content="content">
   <div #componentContainer
        [id]="content?.id">
   </div>
 </ng-template>
+
+<nz-modal [(nzVisible)]="addComponentModalVisible"
+          nzTitle="Add Component"
+          (nzOnCancel)="cancelAddComponent()"
+          nzOkText="Add Component"
+          (nzOnOk)="onAddComponentToContainer()">
+  <ng-container *nzModalContent>
+    <div class="components">
+      <nz-checkbox-group [(ngModel)]="componentSelectOptions"></nz-checkbox-group>
+    </div>
+    <div *ngIf="showRequiredError">
+      You must select at least one component
+    </div>
+  </ng-container>
+</nz-modal>

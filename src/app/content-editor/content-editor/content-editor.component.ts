@@ -1,7 +1,9 @@
-import { AfterViewInit, Component, ComponentFactoryResolver, OnInit, QueryList, ViewChildren, ViewContainerRef } from '@angular/core';
+import { AfterViewInit, Component, ComponentFactoryResolver, ComponentRef, OnInit, QueryList, ViewChildren, ViewContainerRef } from '@angular/core';
 import { ContentTree, ContentTreeMapping } from '../utils/content-tree.interface';
 import { ContentTreeItemType } from '../utils/content-tree-item-type.enum';
 import { ComponentFactory } from '../utils/component-factory';
+import { KeyValue } from '@angular/common';
+import { inputDefinitions } from '../utils/input-definitions';
 
 @Component({
   selector: 'app-content-editor',
@@ -13,13 +15,11 @@ export class ContentEditorComponent implements OnInit, AfterViewInit {
   @ViewChildren('componentContainer', { read: ViewContainerRef }) layouts!: QueryList<ViewContainerRef>;
 
   ContentTreeItemType = ContentTreeItemType;
+  addedComponents: { id: string, componentRef: ComponentRef<any> }[] = [];
   initialContentTree = {
     id: '0',
     type: ContentTreeItemType.Container,
   };
-  defaultContainer = {
-
-  }
   contentTree: ContentTree[] = [
     this.initialContentTree,
     {
@@ -36,12 +36,20 @@ export class ContentEditorComponent implements OnInit, AfterViewInit {
     }
   ];
 
+  activeContentTreeItem: ContentTree | undefined;
+
+  addComponentModalVisible = false;
+  addComponentParentContainerId: string | undefined;
+  componentSelectOptions!: { label: string, value: string, checked: boolean }[];
+  showRequiredError = false;
 
   constructor(
     private componentFactoryResolver: ComponentFactoryResolver
   ) { }
 
   ngOnInit(): void {
+    this.componentSelectOptions = Object.entries(ContentTreeItemType).filter(([key, value]) => value !== ContentTreeItemType.Container).map(([key, value]) => ({ label: key, value, checked: false }));
+    console.log(this.componentSelectOptions);
   }
 
   ngAfterViewInit(): void {
@@ -52,8 +60,8 @@ export class ContentEditorComponent implements OnInit, AfterViewInit {
     contentTree.forEach(contentTreeItem => {
       if (contentTreeItem.type !== ContentTreeItemType.Container) {
         this.renderComponent(contentTreeItem);
-      } else if (contentTreeItem.children) {
-        this.renderComponents(contentTreeItem.children);
+      } else if (this.hasChildren(contentTreeItem.id)) {
+        this.renderComponents(this.findChildrenTree(contentTreeItem.id));
       }
     });
   }
@@ -66,6 +74,11 @@ export class ContentEditorComponent implements OnInit, AfterViewInit {
         const componentFactory = this.componentFactoryResolver.resolveComponentFactory(componentToAdd);
         if (componentFactory) {
           const addedComponent = elementContainer.createComponent(componentFactory);
+          this.addedComponents.push({ id: content.id, componentRef: addedComponent })
+          const inputDefinition = inputDefinitions.find(inputDefinition => inputDefinition.component === content.type);
+          inputDefinition?.inputs.forEach(input => {
+            addedComponent.instance[input.fieldName] = input.default;
+          })
         }
       }
     }
@@ -74,14 +87,12 @@ export class ContentEditorComponent implements OnInit, AfterViewInit {
   findChildrenTree(id: string): ContentTree[] {
     const nodePath = id.split('-');
     const children = this.contentTree.filter(item => item.id.startsWith(`${id}-`) && item.id.split('-')?.length === nodePath?.length + 1);
-    console.log(children)
     return children;
   }
 
   hasChildren(id: string) {
     const nodePath = id?.split('-');
     const hasChildren = this.contentTree.some(item => item.id.startsWith(`${id}-`) && item.id.split('-')?.length === nodePath?.length + 1);
-    console.log(id, hasChildren)
     return hasChildren;
   }
 
@@ -112,6 +123,42 @@ export class ContentEditorComponent implements OnInit, AfterViewInit {
       return `${id}-0`;
     }
 
+  }
+
+  onAddComponentToContainerClick(contentId: string) {
+    this.addComponentParentContainerId = contentId;
+    this.addComponentModalVisible = true;
+  }
+
+  onAddComponentToContainer() {
+    const selectedComponents = this.componentSelectOptions.filter(item => item.checked);
+    if (selectedComponents?.length) {
+
+      this.showRequiredError = false;
+      selectedComponents.forEach(component => {
+        const contentTreeItem = {
+          id: this.findIDToNewChild(this.addComponentParentContainerId as string),
+          type: component.value as ContentTreeItemType
+        };
+        this.contentTree.push(contentTreeItem);
+        setTimeout(() => {
+          this.renderComponent(contentTreeItem);
+          component.checked = false;
+          this.addComponentModalVisible = false;
+        }, 300);
+      });
+    } else {
+      this.showRequiredError = true;
+    }
+  }
+
+  cancelAddComponent() {
+    this.addComponentParentContainerId = undefined;
+    this.addComponentModalVisible = false;
+  }
+
+  trackBy(index: number, contentTreeItem: ContentTree): string {
+    return contentTreeItem.id;
   }
 
 }
