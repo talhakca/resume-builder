@@ -3,7 +3,8 @@ import { ContentTreeItemType } from "./content-tree-item-type.enum";
 export interface ContentTree {
   id: string;
   type: ContentTreeItemType;
-  children?: ContentTree[];
+  inputs?: Record<string, unknown>;
+  cssStyle?: Record<string, string>;
 }
 
 export interface ContentTreeMapping {

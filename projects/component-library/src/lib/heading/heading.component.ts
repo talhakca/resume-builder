@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { HeadingType } from '../shared/interfaces/heading-type.enum';
+import { HeadingType } from '../shared/enums/heading-type.enum';
 
 @Component({
   selector: 'lib-heading',

@@ -1,4 +1,5 @@
 export enum ContentTreeItemType {
   Container = 'container',
-  Heading = 'heading'
+  Heading = 'heading',
+  Divider = 'divider'
 }

@@ -7,7 +7,15 @@ import { ContentEditorComponent } from './content-editor/content-editor.componen
 import { FormsModule } from '@angular/forms';
 import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
 import { NzModalModule } from 'ng-zorro-antd/modal';
+import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
+import { NzSelectModule } from 'ng-zorro-antd/select';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzInputModule } from 'ng-zorro-antd/input';
 import { ComponentLibraryModule } from 'projects/component-library/src/lib/component-library.module';
+import { ContentTreeItemSettingsComponent } from './content-tree-item-settings/content-tree-item-settings.component';
+import { DragDropModule } from '@angular/cdk/drag-drop';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzSliderModule } from 'ng-zorro-antd/slider';
 
 const routes: Routes = [
   {
@@ -20,6 +28,7 @@ const routes: Routes = [
 @NgModule({
   declarations: [
     ContentEditorComponent,
+    ContentTreeItemSettingsComponent,
   ],
   imports: [
     CommonModule,
@@ -29,7 +38,14 @@ const routes: Routes = [
     NzLayoutModule,
     NzCheckboxModule,
     NzModalModule,
-    ComponentLibraryModule
+    ComponentLibraryModule,
+    NzPopconfirmModule,
+    NzSelectModule,
+    NzInputModule,
+    NzButtonModule,
+    DragDropModule,
+    NzIconModule,
+    NzSliderModule
   ]
 })
 export class ContentEditorModule { }

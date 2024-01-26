@@ -1,17 +1,41 @@
+{{activeContentTreeItem | json}}
 <ng-container *ngIf="contentTree">
   <!-- Main layout -->
-  <div class="rendered-content-tree">
-    <ng-container *ngTemplateOutlet="
+  <div class="layout">
+    <div class="rendered-content-tree">
+      <ng-container *ngTemplateOutlet="
                        layoutTemplate;
                        context: { content: initialContentTree,hasChildren:hasChildren(initialContentTree.id) }">
-    </ng-container>
+      </ng-container>
+    </div>
+    <div class="settings">
+      <app-content-tree-item-settings *ngIf="activeContentTreeItem"
+                                      [contentTreeItem]="activeContentTreeItem"
+                                      (contentSaved)="updateInputs()"></app-content-tree-item-settings>
+    </div>
   </div>
 </ng-container>
 
 <ng-template #layoutTemplate
              let-content="content">
-  <div [ngClass]="!hasChildren(content.id) ? 'empty-container' : 'filled-container'"
-       class="container">
+  <div [ngClass]="[
+    !hasChildren(content.id) ? 'empty-container' : 'filled-container',
+    content.id === hoveredId ? 'hover' : 'not-hover',
+    content.id === '0' ? 'rendered-content-tree': '',
+    content.id === activeContentTreeItem?.id ? 'active' : ''
+    ]"
+       class="container"
+       #container
+       [id]="content.id"
+       (mouseenter)="onHover(content.id)"
+       (mouseleave)="onHover()"
+       (click)="onContainerClick($event,content.id)">
+    <div *ngIf="hoveredId === content.id"
+         class="toolbar">
+      <a (click)="openSelectModal(content.id)">
+        Add
+      </a>
+    </div>
     <ng-container *ngIf="hasChildren(content.id); else emptyContainer">
       <ng-container *ngFor="let child of findChildrenTree(content.id); trackBy: trackBy">
         <ng-container *ngIf="child.type === ContentTreeItemType.Container; else comTmpl">
@@ -29,8 +53,9 @@
       </ng-container>
     </ng-container>
     <ng-template #emptyContainer>
-      This container is empty. Click <a (click)="onAddContainerClick(content.id)">here</a> to add container, or click <a
-         (click)="onAddComponentToContainerClick(content.id)">here</a>
+      This container is empty. Click &nbsp;<a (click)="onAddContainerClick(content.id)">here</a>&nbsp; to add container,
+      or click
+      &nbsp; <a (click)="onAddComponentToContainerClick(content.id)">here</a>&nbsp;
       to add component.
     </ng-template>
   </div>
@@ -38,8 +63,14 @@
 
 <ng-template #componentTemplate
              let-content="content">
-  <div #componentContainer
-       [id]="content?.id">
+  <div class="component-container"
+       [ngClass]="content.id === activeContentTreeItem?.id ? 'active' : ''"
+       (mouseenter)="onHover(content.id)"
+       (mouseLeave)="onHover()"
+       (click)="setActiveComponent($event,content.id)">
+    <div #componentContainer
+         [id]="content.id">
+    </div>
   </div>
 </ng-template>
 
@@ -56,4 +87,20 @@
       You must select at least one component
     </div>
   </ng-container>
+</nz-modal>
+
+<nz-modal [(nzVisible)]="addComponentOrContainerModalVisibility"
+          nzTitle="Please Select"
+          (nzOnCancel)="addComponentOrContainerModalVisibility = false"
+          [nzFooter]="footerTmpl">
+  <ng-container *nzModalContent>
+  </ng-container>
+  <ng-template #footerTmpl>
+    <button nz-button
+            nzType="primary"
+            (click)="onAddComponentToContainerClick(addContainerId)">Add Component</button>
+    <button nz-button
+            nzType="primary"
+            (click)="onAddContainerClick(addContainerId)">Add Container</button>
+  </ng-template>
 </nz-modal>

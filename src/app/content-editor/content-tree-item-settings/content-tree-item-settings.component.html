@@ -1,0 +1,71 @@
+<div class="component-wrapper">
+  <section *ngIf="activeInputDefinition && contentTreeItem.type !== ContentTreeItemType.Container"
+           class="form-area">
+
+    <div *ngFor="let inputDefinition of activeInputDefinition.inputs"
+         class="form-item">
+      <ng-container *ngTemplateOutlet="
+         inputTmpl;
+         context: { inputDefinition }">
+      </ng-container>
+    </div>
+    <button nz-button
+            nzType="primary"
+            (click)="onSaveContent()">Save Content</button>
+
+  </section>
+  <section *ngIf="contentTreeItem.type === ContentTreeItemType.Container">
+    <div *ngIf="contentTreeItem.id !== '0'"
+         class="width">
+      <div class="title">
+        Width
+      </div>
+      <div class="form-item">
+        <nz-slider [(ngModel)]="width"
+                   [nzMin]="0"
+                   [nzMax]="100"
+                   [nzStep]="5"
+                   (ngModelChange)="onWidthChange()"></nz-slider>
+      </div>
+    </div>
+    <div *ngFor="let alignment of flexAlignments"
+         class="alignment">
+      <div class="title">
+        {{alignment.key}}
+      </div>
+      <div class="options">
+        <ng-container *ngFor="let option of alignment.value">
+          <div class="icon">
+            <button nz-button
+                    nzType="default"
+                    (click)="onFlexChange(option)">
+              <span nz-icon
+                    [nzType]="option.icon"
+                    nzTheme="outline"></span>
+            </button>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+  </section>
+</div>
+
+<ng-template #inputTmpl
+             let-inputDefinition="inputDefinition">
+  {{inputDefinition.fieldName}}
+  <ng-container *ngIf="inputDefinition.type === 'enum'; else compTempl">
+    <nz-select [(ngModel)]="contentTreeItem.inputs[inputDefinition.fieldName]">
+      <nz-option *ngFor="let option of getOptionsFromEnum(inputDefinition.enum)"
+                 [nzValue]="option.value"
+                 [nzLabel]="option.key"></nz-option>
+
+    </nz-select>
+  </ng-container>
+  <ng-template #compTempl>
+    <input *ngIf="inputDefinition.type === 'string'"
+           nz-input
+           [(ngModel)]="contentTreeItem.inputs[inputDefinition.fieldName]"
+           [placeholder]="inputDefinition.fieldName"
+           nzSize="default" />
+  </ng-template>
+</ng-template>

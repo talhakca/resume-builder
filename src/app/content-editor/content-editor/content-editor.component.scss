@@ -1,11 +1,33 @@
 .empty-container {
-  padding: 100px;
-  text-align: center;
+  justify-content: center;
+  align-items: center;
+}
+
+.layout {
+  display: flex;
+  justify-content: space-between;
 }
 
 .container {
   border: 2px solid gray !important;
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  max-height: max-content;
 }
+
+.toolbar {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  display: block;
+  width: 40px;
+  background: blue;
+  color: white;
+  z-index: 999;
+  cursor: pointer;
+}
+
 
 .rendered-content-tree {
   height: 1123px;
@@ -13,10 +35,26 @@
 }
 
 .filled-container {
-  padding: 5px
+  padding: 20px
 }
 
 .error {
   font-size: small;
   color: red;
+}
+
+.component-container {
+  border: 1px solid pink;
+  padding: 10px;
+  width: 100%;
+}
+
+.hover {
+  border: 2px solid rgb(234, 183, 17) !important;
+  box-sizing: border-box;
+}
+
+.active {
+  border: 1px solid blue !important;
+  box-sizing: border-box;
 }
