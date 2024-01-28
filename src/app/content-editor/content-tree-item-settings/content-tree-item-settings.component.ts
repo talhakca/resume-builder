@@ -103,6 +103,7 @@ export class ContentTreeItemSettingsComponent implements OnInit, OnChanges {
 
   width: number;
   height: number;
+  padding: number;
   stringInputType = StringInputType.Textbox;
   StringInputType = StringInputType;
 
@@ -125,19 +126,29 @@ export class ContentTreeItemSettingsComponent implements OnInit, OnChanges {
     if (this.contentTreeItem.type === this.ContentTreeItemType.Container) {
       this.setWidth();
       this.setHeight();
+      this.setPadding();
     }
   }
 
   setWidth() {
-    const match = this.contentTreeItem.cssStyle.width.match(/(\d+)%/);
-    // Extract the numeric value and convert it to a number
-    this.width = match ? Number(match[1]) : 100;
+    const width = this.getNumberFromString(this.contentTreeItem.cssStyle.width);
+    this.width = width ?? 100;
   }
 
   setHeight() {
-    const match = this.contentTreeItem.cssStyle.height.match(/(\d+)%/);
-    // Extract the numeric value and convert it to a number
-    this.height = match ? Number(match[1]) : 100;
+    const height = this.getNumberFromString(this.contentTreeItem.cssStyle.height);
+    this.height = height ?? 100;
+  }
+
+  setPadding() {
+    const padding = this.getNumberFromString(this.contentTreeItem.cssStyle.padding);
+    console.log(padding);
+    this.padding = padding ?? 0;
+  }
+
+  getNumberFromString(string: string) {
+    const match = string?.match(/(\d+)%/);
+    return match ? Number(match[1]) : undefined;
   }
 
   setActiveInputDefinition() {
@@ -166,6 +177,11 @@ export class ContentTreeItemSettingsComponent implements OnInit, OnChanges {
 
   onHeightChange() {
     this.updateCSSStyle('height', `${this.height}%`);
+    this.emitContentTreeItem();
+  }
+
+  onPaddingChange() {
+    this.updateCSSStyle('padding', `${this.padding}px`);
     this.emitContentTreeItem();
   }
 

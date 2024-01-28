@@ -3,7 +3,6 @@
   align-items: center !important;
   display: flex !important;
   width: 100%;
-  height: 100%;
 }
 
 .layout {
@@ -61,8 +60,7 @@
 
 .component-container {
   border: var(--component-container-border);
-  width: 100%;
-  height: 100%;
+  // height: 100%;
 }
 
 .hover {

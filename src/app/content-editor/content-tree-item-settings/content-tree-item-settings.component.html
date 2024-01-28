@@ -63,6 +63,26 @@
         </ng-container>
       </div>
     </div>
+    <div class="background-color">
+      <div class="title">
+        Background Color
+      </div>
+      <div class="options">
+        <input [(colorPicker)]="contentTreeItem.cssStyle.background"
+               placeholder="Click to change color"
+               (colorPickerChange)="emitContentTreeItem()" />
+      </div>
+    </div>
+    <div class="color">
+      <div class="title">
+        Padding
+      </div>
+      <div class="options">
+        <nz-input-number [(ngModel)]="padding"
+                         [nzMin]="0"
+                         (ngModelChange)="onPaddingChange()"></nz-input-number>
+      </div>
+    </div>
   </section>
 </div>
 

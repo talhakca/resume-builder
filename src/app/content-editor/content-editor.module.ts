@@ -18,7 +18,8 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzSliderModule } from 'ng-zorro-antd/slider';
 import { QuillModule } from 'ngx-quill'
 import { NzRadioModule } from 'ng-zorro-antd/radio';
-
+import { ColorPickerModule } from 'ngx-color-picker';
+import { NzInputNumberModule } from 'ng-zorro-antd/input-number'
 const routes: Routes = [
   {
     path: '',
@@ -49,7 +50,9 @@ const routes: Routes = [
     NzIconModule,
     NzSliderModule,
     QuillModule,
-    NzRadioModule
+    NzRadioModule,
+    ColorPickerModule,
+    NzInputNumberModule
   ]
 })
 export class ContentEditorModule { }

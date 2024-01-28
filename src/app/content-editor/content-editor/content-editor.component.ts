@@ -54,6 +54,10 @@ export class ContentEditorComponent implements OnInit, AfterViewInit, OnDestroy 
     {
       key: '--active-border',
       value: '1px solid blue'
+    },
+    {
+      key: '--active-border',
+      value: '1px solid blue'
     }
   ];
 
