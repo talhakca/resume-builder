@@ -34,5 +34,15 @@ export const inputDefinitions = [
         default: ''
       }
     ]
+  },
+  {
+    component: ContentTreeItemType.Text,
+    inputs: [
+      {
+        type: 'string',
+        fieldName: 'text',
+        default: 'Enter your text here'
+      }
+    ]
   }
 ];
