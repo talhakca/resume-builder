@@ -1,6 +1,7 @@
 .empty-container {
-  justify-content: center;
-  align-items: center;
+  justify-content: center !important;
+  align-items: center !important;
+  display: flex !important;
 }
 
 .layout {
@@ -11,27 +12,40 @@
 .container {
   border: 2px solid gray !important;
   position: relative;
-  display: flex;
-  flex-wrap: wrap;
+  display: flex !important;
+  flex-wrap: nowrap;
   max-height: max-content;
+  overflow: hidden;
 }
 
 .toolbar {
   position: absolute;
   top: 0px;
   left: 0px;
-  display: block;
-  width: 40px;
-  background: blue;
-  color: white;
+  display: flex;
+  justify-content: space-between;
+  box-sizing: border-box;
+  width: 100%;
   z-index: 999;
   cursor: pointer;
 }
 
+.toolbar-button {
+  width: 60px;
+  text-align: center;
+  background: var(--body-background-color);
+  color: blue;
+  border: 1px solid blue;
+}
+
 
 .rendered-content-tree {
-  height: 1123px;
-  width: 794px;
+  height: 1123px !important;
+  width: 794px !important;
+}
+
+.settings {
+  width: 30%;
 }
 
 .filled-container {

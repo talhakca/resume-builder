@@ -1,0 +1,22 @@
+<h3>
+  User Templates
+</h3>
+<nz-table #basicTable
+          [nzData]="contentTrees">
+  <thead>
+    <tr>
+      <th>Template Name</th>
+      <th>Description</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let data of basicTable.data">
+      <td>{{data.label}}</td>
+      <td>{{data.description}}</td>
+      <td>
+        <a>Update</a>
+      </td>
+    </tr>
+  </tbody>
+</nz-table>

@@ -28,22 +28,38 @@
                    (ngModelChange)="onWidthChange()"></nz-slider>
       </div>
     </div>
-    <div *ngFor="let alignment of flexAlignments"
+    <div *ngIf="contentTreeItem.id !== '0'"
+         class="width">
+      <div class="title">
+        Height
+      </div>
+      <div class="form-item">
+        <nz-slider [(ngModel)]="height"
+                   [nzMin]="0"
+                   [nzMax]="100"
+                   [nzStep]="5"
+                   (ngModelChange)="onHeightChange()"></nz-slider>
+      </div>
+    </div>
+    <div *ngFor="let cssOption of cssOptions"
          class="alignment">
       <div class="title">
-        {{alignment.key}}
+        {{cssOption.key}}
       </div>
       <div class="options">
-        <ng-container *ngFor="let option of alignment.value">
-          <div class="icon">
-            <button nz-button
-                    nzType="default"
-                    (click)="onFlexChange(option)">
-              <span nz-icon
-                    [nzType]="option.icon"
-                    nzTheme="outline"></span>
-            </button>
-          </div>
+        <ng-container>
+          <ng-container *ngFor="let option of cssOption.value">
+            <nz-radio-group [(ngModel)]="contentTreeItem.cssStyle[cssOption.fieldName]"
+                            (ngModelChange)="emitContentTreeItem()">
+              <label nz-radio-button
+                     [nzValue]="option.value">
+                <span nz-icon
+                      [nzType]="option.icon"
+                      nzTheme="outline"></span>
+              </label>
+
+            </nz-radio-group>
+          </ng-container>
         </ng-container>
       </div>
     </div>
@@ -52,7 +68,21 @@
 
 <ng-template #inputTmpl
              let-inputDefinition="inputDefinition">
-  {{inputDefinition.fieldName}}
+  <div class="label">
+    <div class="label-title">
+      {{inputDefinition.fieldName}}
+    </div>
+    <div class="action-button">
+      <a (click)="changeStringInputType()">
+        <ng-container *ngIf="stringInputType === StringInputType.Textbox; else editAsTextTmpl">
+          Edit As Html
+        </ng-container>
+        <ng-template #editAsTextTmpl>
+          Edit As Text
+        </ng-template>
+      </a>
+    </div>
+  </div>
   <ng-container *ngIf="inputDefinition.type === 'enum'; else compTempl">
     <nz-select [(ngModel)]="contentTreeItem.inputs[inputDefinition.fieldName]">
       <nz-option *ngFor="let option of getOptionsFromEnum(inputDefinition.enum)"
@@ -62,10 +92,21 @@
     </nz-select>
   </ng-container>
   <ng-template #compTempl>
-    <input *ngIf="inputDefinition.type === 'string'"
-           nz-input
-           [(ngModel)]="contentTreeItem.inputs[inputDefinition.fieldName]"
-           [placeholder]="inputDefinition.fieldName"
-           nzSize="default" />
+    <ng-container *ngIf="inputDefinition.type === 'string'">
+
+      <!-- <button nz-button
+              nzType="primary"
+              >
+        
+      </button> -->
+      <input *ngIf="stringInputType === StringInputType.Textbox; else richTextEditorTmpl"
+             nz-input
+             [(ngModel)]="contentTreeItem.inputs[inputDefinition.fieldName]"
+             [placeholder]="inputDefinition.fieldName"
+             nzSize="default" />
+      <ng-template #richTextEditorTmpl>
+        <quill-editor [(ngModel)]="contentTreeItem.inputs[inputDefinition.fieldName]"></quill-editor>
+      </ng-template>
+    </ng-container>
   </ng-template>
 </ng-template>

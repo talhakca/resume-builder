@@ -2,7 +2,9 @@
 @import "~ng-zorro-antd/style/index.min.css";
 /* Import base styles */
 @import "~ng-zorro-antd/button/style/index.min.css";
-/* Import one component's styles */
+@import '~quill/dist/quill.bubble.css';
+// or
+@import '~quill/dist/quill.snow.css';
 
 /* You can add global styles to this file, and also import other style files */
 :root {

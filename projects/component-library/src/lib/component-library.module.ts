@@ -5,7 +5,7 @@ import { CommonModule } from '@angular/common';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { DividerComponent } from './divider/divider.component';
 import { TextComponent } from './text/text.component';
-
+import { QuillModule } from 'ngx-quill';
 
 @NgModule({
   declarations: [
@@ -16,7 +16,8 @@ import { TextComponent } from './text/text.component';
   ],
   imports: [
     CommonModule,
-    NzDividerModule
+    NzDividerModule,
+    QuillModule
   ],
   exports: [
     ComponentLibraryComponent

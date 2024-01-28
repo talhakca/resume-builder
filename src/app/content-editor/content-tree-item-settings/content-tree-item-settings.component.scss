@@ -6,6 +6,11 @@
   display: flex;
 }
 
+.label {
+  display: flex;
+  justify-content: space-between;
+}
+
 .title {
   margin-bottom: 5px;
 }

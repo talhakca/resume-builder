@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange
 import { ContentTree } from '../utils/content-tree.interface';
 import { inputDefinitions } from '../utils/input-definitions';
 import { ContentTreeItemType } from '../utils/content-tree-item-type.enum';
+import { StringInputType } from '../utils/string-input-type.enum';
 
 @Component({
   selector: 'app-content-tree-item-settings',
@@ -13,64 +14,97 @@ export class ContentTreeItemSettingsComponent implements OnInit, OnChanges {
   @Input() contentTreeItem: ContentTree;
 
   @Output() contentSaved = new EventEmitter();
-
+  undoOption = {
+    icon: 'undo',
+    value: 'unset'
+  };
   inputDefinitions = inputDefinitions;
   activeInputDefinition;
   ContentTreeItemType = ContentTreeItemType;
-  flexAlignments = [
+  cssOptions = [
     {
       key: 'Vertical Alignment',
+      fieldName: 'align-items',
       value: [
         {
           icon: 'vertical-align-top',
-          key: 'align-items',
           value: 'flex-start'
         },
         {
           icon: 'vertical-align-middle',
-          key: 'align-items',
           value: 'center'
         },
         {
           icon: 'vertical-align-bottom',
-          key: 'align-items',
           value: 'flex-end'
         },
         {
           icon: 'column-height',
-          key: 'align-items',
           value: 'space-between'
-        }
-      ]
+        },
+        this.undoOption,
+      ],
+
     },
     {
       key: 'Horizontal Alignment',
+      fieldName: 'justify-content',
       value: [
         {
           icon: 'align-left',
-          key: 'justify-content',
           value: 'flex-start'
         },
         {
           icon: 'align-center',
-          key: 'justify-content',
           value: 'center'
         },
         {
           icon: 'align-right',
-          key: 'justify-content',
           value: 'flex-end'
         },
         {
           icon: 'column-width',
-          key: 'justify-content',
           value: 'space-between'
         },
+        this.undoOption
+      ]
+    },
+    {
+      key: 'Direction',
+      fieldName: 'flex-direction',
+      value: [
+        {
+          icon: 'right',
+          value: 'row'
+        },
+        {
+          icon: 'down',
+          value: 'column'
+        },
+        this.undoOption
+      ]
+    },
+    {
+      key: 'Wrap',
+      fieldName: 'flex-wrap',
+      value: [
+        {
+          icon: 'check-circle',
+          value: 'wrap'
+        },
+        {
+          icon: 'stop',
+          value: 'nowrap'
+        },
+        this.undoOption
       ]
     }
   ];
 
   width: number;
+  height: number;
+  stringInputType = StringInputType.Textbox;
+  StringInputType = StringInputType;
 
   constructor() { }
 
@@ -89,15 +123,21 @@ export class ContentTreeItemSettingsComponent implements OnInit, OnChanges {
   checkChanges() {
     this.setActiveInputDefinition();
     if (this.contentTreeItem.type === this.ContentTreeItemType.Container) {
-      this.setWidth()
+      this.setWidth();
+      this.setHeight();
     }
   }
 
   setWidth() {
     const match = this.contentTreeItem.cssStyle.width.match(/(\d+)%/);
-
     // Extract the numeric value and convert it to a number
     this.width = match ? Number(match[1]) : 100;
+  }
+
+  setHeight() {
+    const match = this.contentTreeItem.cssStyle.height.match(/(\d+)%/);
+    // Extract the numeric value and convert it to a number
+    this.height = match ? Number(match[1]) : 100;
   }
 
   setActiveInputDefinition() {
@@ -112,11 +152,6 @@ export class ContentTreeItemSettingsComponent implements OnInit, OnChanges {
     this.contentSaved.emit();
   }
 
-  onFlexChange(alignment: { key: string, value: string, icon: string }) {
-    this.updateCSSStyle(alignment.key, alignment.value);
-    this.emitContentTreeItem();
-  }
-
   updateCSSStyle(key: string, value: string) {
     this.contentTreeItem.cssStyle = {
       ...(this.contentTreeItem.cssStyle ?? {}),
@@ -129,8 +164,21 @@ export class ContentTreeItemSettingsComponent implements OnInit, OnChanges {
     this.emitContentTreeItem();
   }
 
+  onHeightChange() {
+    this.updateCSSStyle('height', `${this.height}%`);
+    this.emitContentTreeItem();
+  }
+
   emitContentTreeItem() {
     this.contentSaved.emit();
+  }
+
+  changeStringInputType() {
+    if (this.stringInputType === StringInputType.RichTextEditor) {
+      this.stringInputType = StringInputType.Textbox;
+    } else {
+      this.stringInputType = StringInputType.RichTextEditor;
+    }
   }
 
 }

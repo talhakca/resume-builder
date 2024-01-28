@@ -1,16 +1,17 @@
-import { AfterViewInit, ChangeDetectorRef, Component, ComponentFactoryResolver, ComponentRef, OnInit, QueryList, Renderer2, ViewChildren, ViewContainerRef } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ComponentFactoryResolver, ComponentRef, OnDestroy, OnInit, QueryList, Renderer2, ViewChildren, ViewContainerRef } from '@angular/core';
 import { ContentTree } from '../utils/content-tree.interface';
 import { ContentTreeItemType } from '../utils/content-tree-item-type.enum';
 import { ComponentFactory } from '../utils/component-factory';
 import { inputDefinitions } from '../utils/input-definitions';
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-content-editor',
   templateUrl: './content-editor.component.html',
   styleUrls: ['./content-editor.component.scss']
 })
-export class ContentEditorComponent implements OnInit, AfterViewInit {
+export class ContentEditorComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChildren('componentContainer', { read: ViewContainerRef }) layouts!: QueryList<ViewContainerRef>;
 
@@ -19,9 +20,12 @@ export class ContentEditorComponent implements OnInit, AfterViewInit {
   ContentTreeItemType = ContentTreeItemType;
   addedComponents: { id: string, componentRef: ComponentRef<any> }[] = [];
   defaultCssStyle = {
-    width: 'auto',
+    width: 'unset',
     'align-items': 'unset',
-    'justify-content': 'unset'
+    'justify-content': 'unset',
+    height: 'unset',
+    'flex-wrap': 'wrap',
+    'flex-direction': 'row'
   };
   initialContentTree = {
     id: '0',
@@ -32,8 +36,6 @@ export class ContentEditorComponent implements OnInit, AfterViewInit {
     this.initialContentTree
   ];
 
-  dragMode = false;
-  dragOverContainerId: string;
   activeContentTreeItem: ContentTree | undefined;
 
   addComponentModalVisible = false;
@@ -42,20 +44,51 @@ export class ContentEditorComponent implements OnInit, AfterViewInit {
   addContainerId: string | undefined;
   componentSelectOptions!: { label: string, value: string, checked: boolean }[];
   showRequiredError = false;
-  draggingContent: ContentTree;
+  activeContentTree!: {
+    label: string,
+    description: string,
+    contentTree: ContentTree[]
+  };
+  contentTrees!: {
+    label: string,
+    description: string,
+    contentTree: ContentTree[]
+  }[];
+  subscription: Subscription;
 
   constructor(
     private componentFactoryResolver: ComponentFactoryResolver,
-    private changeDetector: ChangeDetectorRef
+    private activatedRoute: ActivatedRoute
   ) { }
 
   ngOnInit(): void {
     this.componentSelectOptions = Object.entries(ContentTreeItemType).filter(([key, value]) => value !== ContentTreeItemType.Container).map(([key, value]) => ({ label: key, value, checked: false }));
-    console.log(this.componentSelectOptions);
+    this.subscription = this.subscribeToId();
   }
 
   ngAfterViewInit(): void {
     setTimeout(() => this.renderComponents(this.contentTree), 300)
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
+  }
+
+  subscribeToId() {
+    return this.activatedRoute.params.subscribe(params => {
+      const id = params.id;
+      if (id) {
+        const contentTrees = localStorage.getItem('contentTrees');
+        if (contentTrees) {
+          const contentTreesJSON = JSON.parse(contentTrees);
+          this.contentTrees = contentTreesJSON;
+          const activeContentTree = contentTreesJSON?.find(contentTreDef => contentTreDef.id === id);
+          if (activeContentTree) {
+            this.activeContentTree = activeContentTree;
+          }
+        }
+      }
+    });
   }
 
   renderComponents(contentTree: ContentTree[]) {
@@ -193,6 +226,7 @@ export class ContentEditorComponent implements OnInit, AfterViewInit {
     } else {
       const element = document.getElementById(this.activeContentTreeItem.id);
       Object.entries(this.activeContentTreeItem.cssStyle).forEach(([key, value]) => {
+        console.log(key, value)
         element.style[key] = value;
       })
     }
@@ -211,5 +245,9 @@ export class ContentEditorComponent implements OnInit, AfterViewInit {
   openSelectModal(id: string) {
     this.addContainerId = id;
     this.addComponentOrContainerModalVisibility = true;
+  }
+
+  deleteContainer(contentId: string) {
+    this.contentTree = this.contentTree.filter(item => item.id !== contentId);
   }
 }

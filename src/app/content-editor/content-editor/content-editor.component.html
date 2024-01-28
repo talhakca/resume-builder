@@ -1,12 +1,14 @@
-{{activeContentTreeItem | json}}
+{{contentTree | json}}
 <ng-container *ngIf="contentTree">
   <!-- Main layout -->
   <div class="layout">
-    <div class="rendered-content-tree">
-      <ng-container *ngTemplateOutlet="
-                       layoutTemplate;
-                       context: { content: initialContentTree,hasChildren:hasChildren(initialContentTree.id) }">
-      </ng-container>
+    <div class="content-tree-layout">
+      <div class="rendered-content-tree">
+        <ng-container *ngTemplateOutlet="
+                         layoutTemplate;
+                         context: { content: initialContentTree,hasChildren:hasChildren(initialContentTree.id) }">
+        </ng-container>
+      </div>
     </div>
     <div class="settings">
       <app-content-tree-item-settings *ngIf="activeContentTreeItem"
@@ -32,9 +34,17 @@
        (click)="onContainerClick($event,content.id)">
     <div *ngIf="hoveredId === content.id"
          class="toolbar">
-      <a (click)="openSelectModal(content.id)">
-        Add
-      </a>
+      <div class="toolbar-button">
+        <a (click)="openSelectModal(content.id)">
+          Add
+        </a>
+      </div>
+      <div *ngIf="content.id !== '0'"
+           class="toolbar-button">
+        <a (click)="deleteContainer(content.id)">
+          Delete
+        </a>
+      </div>
     </div>
     <ng-container *ngIf="hasChildren(content.id); else emptyContainer">
       <ng-container *ngFor="let child of findChildrenTree(content.id); trackBy: trackBy">
@@ -53,10 +63,13 @@
       </ng-container>
     </ng-container>
     <ng-template #emptyContainer>
-      This container is empty. Click &nbsp;<a (click)="onAddContainerClick(content.id)">here</a>&nbsp; to add container,
-      or click
-      &nbsp; <a (click)="onAddComponentToContainerClick(content.id)">here</a>&nbsp;
-      to add component.
+      <div class="empty-add">
+        This container is empty. Click &nbsp;<a (click)="onAddContainerClick(content.id)">here</a>&nbsp; to add
+        container,
+        or click
+        &nbsp; <a (click)="onAddComponentToContainerClick(content.id)">here</a>&nbsp;
+        to add component.
+      </div>
     </ng-template>
   </div>
 </ng-template>

@@ -13,6 +13,7 @@ import { registerLocaleData } from '@angular/common';
 import en from '@angular/common/locales/en';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { QuillModule } from 'ngx-quill'
 
 registerLocaleData(en);
 @NgModule({
@@ -26,7 +27,8 @@ registerLocaleData(en);
     BrowserAnimationsModule,
     MatButtonModule,
     FormsModule,
-    HttpClientModule
+    HttpClientModule,
+    QuillModule.forRoot()
   ],
   providers: [{ provide: NZ_I18N, useValue: en_US }],
   bootstrap: [AppComponent]

@@ -16,6 +16,8 @@ import { ContentTreeItemSettingsComponent } from './content-tree-item-settings/c
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzSliderModule } from 'ng-zorro-antd/slider';
+import { QuillModule } from 'ngx-quill'
+import { NzRadioModule } from 'ng-zorro-antd/radio';
 
 const routes: Routes = [
   {
@@ -45,7 +47,9 @@ const routes: Routes = [
     NzButtonModule,
     DragDropModule,
     NzIconModule,
-    NzSliderModule
+    NzSliderModule,
+    QuillModule,
+    NzRadioModule
   ]
 })
 export class ContentEditorModule { }
