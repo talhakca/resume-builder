@@ -64,6 +64,9 @@
   --header-height: 160px;
   --footer-height: 30px;
   --content-height: calc(100vh - var(--footer-height) - var(--header-height));
+  --container-border: 2px solid gray !important;
+  --filled-container-padding: 10px;
+  --component-container-border: 1px solid pink;
 }
 
 section,

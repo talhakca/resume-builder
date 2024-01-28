@@ -1,10 +1,13 @@
-import { AfterViewInit, ChangeDetectorRef, Component, ComponentFactoryResolver, ComponentRef, OnDestroy, OnInit, QueryList, Renderer2, ViewChildren, ViewContainerRef } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ComponentFactoryResolver, ComponentRef, HostListener, OnDestroy, OnInit, QueryList, Renderer2, ViewChildren, ViewContainerRef } from '@angular/core';
 import { ContentTree } from '../utils/content-tree.interface';
 import { ContentTreeItemType } from '../utils/content-tree-item-type.enum';
 import { ComponentFactory } from '../utils/component-factory';
 import { inputDefinitions } from '../utils/input-definitions';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { LocalStorageService } from 'src/app/services/local-storage-service/local-storage.service';
+import { ContentTreeDefinition } from 'src/app/layout-crud/select-layout/utils/content-tree-definition.interface';
+import { KeyValue } from '@angular/common';
 
 @Component({
   selector: 'app-content-editor',
@@ -14,6 +17,46 @@ import { Subscription } from 'rxjs';
 export class ContentEditorComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChildren('componentContainer', { read: ViewContainerRef }) layouts!: QueryList<ViewContainerRef>;
+  @HostListener('window:keyup', ['$event'])
+  keyEvent(event: KeyboardEvent) {
+    if (event.key === 'Control') {
+      if (this.editMode) {
+        this.editModeStyles.forEach(key => {
+          document.documentElement.style.setProperty(key, '0px');
+        });
+      } else {
+        this.defaultStyles.forEach(item => {
+          console.log(item)
+          document.documentElement.style.setProperty(item.key, item.value);
+        });
+      }
+      this.editMode = !this.editMode;
+    }
+  };
+
+  defaultStyles: KeyValue<string, string>[] = [
+    {
+      key: '--container-border',
+      value: '2px solid gray'
+    },
+    {
+      key: '--filled-container-padding',
+      value: '10px'
+    }
+    ,
+    {
+      key: '--component-container-border',
+      value: '1px solid pink'
+    }
+  ];
+
+  editModeStyles = [
+    '--container-border',
+    '--filled-container-padding',
+    '--component-container-border'
+  ];
+
+  editMode = true;
 
   hoveredId!: string | undefined;
 
@@ -27,14 +70,8 @@ export class ContentEditorComponent implements OnInit, AfterViewInit, OnDestroy 
     'flex-wrap': 'wrap',
     'flex-direction': 'row'
   };
-  initialContentTree = {
-    id: '0',
-    type: ContentTreeItemType.Container,
-    cssStyle: { ...this.defaultCssStyle }
-  };
-  contentTree: ContentTree[] = [
-    this.initialContentTree
-  ];
+  mainContentTree!: ContentTree;
+  contentTree!: ContentTree[];
 
   activeContentTreeItem: ContentTree | undefined;
 
@@ -44,21 +81,16 @@ export class ContentEditorComponent implements OnInit, AfterViewInit, OnDestroy 
   addContainerId: string | undefined;
   componentSelectOptions!: { label: string, value: string, checked: boolean }[];
   showRequiredError = false;
-  activeContentTree!: {
-    label: string,
-    description: string,
-    contentTree: ContentTree[]
-  };
-  contentTrees!: {
-    label: string,
-    description: string,
-    contentTree: ContentTree[]
-  }[];
+  activeContentTree!: ContentTreeDefinition;
+  contentTrees!: ContentTreeDefinition[];
   subscription: Subscription;
+  contentTreeDefinitionId: string;
+
 
   constructor(
     private componentFactoryResolver: ComponentFactoryResolver,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private lsService: LocalStorageService
   ) { }
 
   ngOnInit(): void {
@@ -67,7 +99,6 @@ export class ContentEditorComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   ngAfterViewInit(): void {
-    setTimeout(() => this.renderComponents(this.contentTree), 300)
   }
 
   ngOnDestroy(): void {
@@ -77,14 +108,19 @@ export class ContentEditorComponent implements OnInit, AfterViewInit, OnDestroy 
   subscribeToId() {
     return this.activatedRoute.params.subscribe(params => {
       const id = params.id;
-      if (id) {
-        const contentTrees = localStorage.getItem('contentTrees');
-        if (contentTrees) {
-          const contentTreesJSON = JSON.parse(contentTrees);
-          this.contentTrees = contentTreesJSON;
-          const activeContentTree = contentTreesJSON?.find(contentTreDef => contentTreDef.id === id);
-          if (activeContentTree) {
-            this.activeContentTree = activeContentTree;
+      if (id !== this.contentTreeDefinitionId) {
+        this.contentTreeDefinitionId = id;
+        this.contentTrees = this.lsService.getContentTrees();
+        if (this.contentTrees) {
+          this.activeContentTree = this.contentTrees?.find(contentTreDef => contentTreDef.id === id);
+          if (this.activeContentTree) {
+            this.contentTree = this.activeContentTree.contentTree;
+            if (this.contentTree) {
+              this.mainContentTree = this.contentTree.find(item => item.id === '0');
+              setTimeout(() => {
+                this.renderComponents([this.mainContentTree]);
+              }, 300)
+            }
           }
         }
       }
@@ -95,8 +131,12 @@ export class ContentEditorComponent implements OnInit, AfterViewInit, OnDestroy 
     contentTree.forEach(contentTreeItem => {
       if (contentTreeItem.type !== ContentTreeItemType.Container) {
         this.renderComponent(contentTreeItem);
-      } else if (this.hasChildren(contentTreeItem.id)) {
-        this.renderComponents(this.findChildrenTree(contentTreeItem.id));
+      } else {
+        const childrenTree = this.findChildrenTree(contentTreeItem.id);
+        this.renderStyles(contentTreeItem);
+        if (childrenTree?.length) {
+          this.renderComponents(childrenTree);
+        }
       }
     });
   }
@@ -111,11 +151,23 @@ export class ContentEditorComponent implements OnInit, AfterViewInit, OnDestroy 
           const addedComponent = elementContainer.createComponent(componentFactory);
           this.addedComponents.push({ id: content.id, componentRef: addedComponent })
           elementContainer.insert(addedComponent.hostView);
-          const inputDefinition = inputDefinitions.find(inputDefinition => inputDefinition.component === content.type);
           Object.entries(content?.inputs).forEach(([key, value]) => {
             addedComponent.instance[key] = value;
           })
         }
+      }
+    }
+  }
+
+  renderStyles(content: ContentTree, tryCount = 0) {
+    const element = document.getElementById(content.id);
+    if (element) {
+      Object.entries(content.cssStyle).forEach(([key, value]) => {
+        element.style[key] = value;
+      });
+    } else {
+      if (tryCount < 5) {
+        setTimeout(() => this.renderStyles(content, tryCount + 1), 300)
       }
     }
   }
@@ -147,8 +199,6 @@ export class ContentEditorComponent implements OnInit, AfterViewInit, OnDestroy 
     if (childrenNodes?.length) {
       const childrenNodeLatestId = this.findChildrenTree(id).map(item => {
         const splitted = item.id.split('-').pop();
-        console.log(typeof splitted)
-        console.log(splitted);
         if (typeof splitted === 'string') {
           return parseInt(splitted);
         } else {
@@ -157,7 +207,6 @@ export class ContentEditorComponent implements OnInit, AfterViewInit, OnDestroy 
       }).filter(i => i !== null) as number[];
 
       childrenNodeLatestId.sort((a: number, b: number) => a - b);
-      console.log(childrenNodeLatestId)
       const index = (childrenNodeLatestId.pop() as number) + 1;
       return `${id}-${index}`
     } else {
@@ -224,11 +273,7 @@ export class ContentEditorComponent implements OnInit, AfterViewInit, OnDestroy 
         updatedComponent.componentRef.instance[key] = value;
       });
     } else {
-      const element = document.getElementById(this.activeContentTreeItem.id);
-      Object.entries(this.activeContentTreeItem.cssStyle).forEach(([key, value]) => {
-        console.log(key, value)
-        element.style[key] = value;
-      })
+      this.renderStyles(this.activeContentTreeItem);
     }
   }
 

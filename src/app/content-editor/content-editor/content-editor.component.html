@@ -1,12 +1,12 @@
 {{contentTree | json}}
-<ng-container *ngIf="contentTree">
+<ng-container *ngIf="mainContentTree">
   <!-- Main layout -->
   <div class="layout">
     <div class="content-tree-layout">
       <div class="rendered-content-tree">
         <ng-container *ngTemplateOutlet="
                          layoutTemplate;
-                         context: { content: initialContentTree,hasChildren:hasChildren(initialContentTree.id) }">
+                         context: { content: mainContentTree,hasChildren:hasChildren(this.mainContentTree.id) }">
         </ng-container>
       </div>
     </div>
@@ -19,9 +19,10 @@
 </ng-container>
 
 <ng-template #layoutTemplate
-             let-content="content">
+             let-content="content"
+             let-containerHasChildren="hasChildren">
   <div [ngClass]="[
-    !hasChildren(content.id) ? 'empty-container' : 'filled-container',
+    !containerHasChildren ? 'empty-container' : 'filled-container',
     content.id === hoveredId ? 'hover' : 'not-hover',
     content.id === '0' ? 'rendered-content-tree': '',
     content.id === activeContentTreeItem?.id ? 'active' : ''
@@ -46,12 +47,12 @@
         </a>
       </div>
     </div>
-    <ng-container *ngIf="hasChildren(content.id); else emptyContainer">
+    <ng-container *ngIf="containerHasChildren; else emptyContainer">
       <ng-container *ngFor="let child of findChildrenTree(content.id); trackBy: trackBy">
         <ng-container *ngIf="child.type === ContentTreeItemType.Container; else comTmpl">
           <ng-container *ngTemplateOutlet="
                        layoutTemplate;
-                       context: { content:child}">
+                       context: { content:child,hasChildren:hasChildren(child.id)}">
           </ng-container>
         </ng-container>
         <ng-template #comTmpl>
@@ -77,7 +78,7 @@
 <ng-template #componentTemplate
              let-content="content">
   <div class="component-container"
-       [ngClass]="content.id === activeContentTreeItem?.id ? 'active' : ''"
+       [ngClass]="[content.id === activeContentTreeItem?.id ? 'active' : '',content.id === hoveredId ? 'hover' : 'not-hover']"
        (mouseenter)="onHover(content.id)"
        (mouseLeave)="onHover()"
        (click)="setActiveComponent($event,content.id)">
