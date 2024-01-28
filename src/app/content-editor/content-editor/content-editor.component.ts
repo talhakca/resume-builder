@@ -42,18 +42,27 @@ export class ContentEditorComponent implements OnInit, AfterViewInit, OnDestroy 
     {
       key: '--filled-container-padding',
       value: '10px'
-    }
-    ,
+    },
     {
       key: '--component-container-border',
       value: '1px solid pink'
+    },
+    {
+      key: '--hover-border',
+      value: '2px solid rgb(234, 183, 17)'
+    },
+    {
+      key: '--active-border',
+      value: '1px solid blue'
     }
   ];
 
   editModeStyles = [
     '--container-border',
     '--filled-container-padding',
-    '--component-container-border'
+    '--component-container-border',
+    '--hover-border',
+    '--active-border'
   ];
 
   editMode = true;

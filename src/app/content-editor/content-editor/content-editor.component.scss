@@ -43,6 +43,7 @@
 .rendered-content-tree {
   height: 1123px !important;
   width: 794px !important;
+  background: var(--pdf-background);
 }
 
 .settings {
@@ -65,11 +66,11 @@
 }
 
 .hover {
-  border: 2px solid rgb(234, 183, 17) !important;
+  border: var(--hover-border) !important;
   box-sizing: border-box;
 }
 
 .active {
-  border: 1px solid blue !important;
+  border: var(--active-border) !important;
   box-sizing: border-box;
 }

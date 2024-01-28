@@ -33,7 +33,7 @@
        (mouseenter)="onHover(content.id)"
        (mouseleave)="onHover()"
        (click)="onContainerClick($event,content.id)">
-    <div *ngIf="hoveredId === content.id"
+    <div *ngIf="hoveredId === content.id && editMode"
          class="toolbar">
       <div class="toolbar-button">
         <a (click)="openSelectModal(content.id)">
@@ -64,7 +64,8 @@
       </ng-container>
     </ng-container>
     <ng-template #emptyContainer>
-      <div class="empty-add">
+      <div *ngIf="editMode"
+           class="empty-add">
         This container is empty. Click &nbsp;<a (click)="onAddContainerClick(content.id)">here</a>&nbsp; to add
         container,
         or click

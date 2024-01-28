@@ -64,9 +64,12 @@
   --header-height: 160px;
   --footer-height: 30px;
   --content-height: calc(100vh - var(--footer-height) - var(--header-height));
-  --container-border: 2px solid gray !important;
+  --container-border: 2px solid gray;
   --filled-container-padding: 10px;
   --component-container-border: 1px solid pink;
+  --hover-border: 2px solid rgb(234, 183, 17);
+  --active-border: 1px solid blue;
+  --pdf-background: #fff;
 }
 
 section,
