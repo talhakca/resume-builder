@@ -9,9 +9,6 @@
          context: { inputDefinition }">
       </ng-container>
     </div>
-    <button nz-button
-            nzType="primary"
-            (click)="onSaveContent()">Save Content</button>
 
   </section>
   <section *ngIf="contentTreeItem.type === ContentTreeItemType.Container">
@@ -92,7 +89,8 @@
     <div class="label-title">
       {{inputDefinition.fieldName}}
     </div>
-    <div class="action-button">
+    <div *ngIf="inputDefinition.allowHTMLEdit !== false"
+         class="action-button">
       <a (click)="changeStringInputType()">
         <ng-container *ngIf="stringInputType === StringInputType.Textbox; else editAsTextTmpl">
           Edit As Html
@@ -104,7 +102,8 @@
     </div>
   </div>
   <ng-container *ngIf="inputDefinition.type === 'enum'; else compTempl">
-    <nz-select [(ngModel)]="contentTreeItem.inputs[inputDefinition.fieldName]">
+    <nz-select [(ngModel)]="contentTreeItem.inputs[inputDefinition.fieldName]"
+               (ngModelChange)="emitContentTreeItem()">
       <nz-option *ngFor="let option of getOptionsFromEnum(inputDefinition.enum)"
                  [nzValue]="option.value"
                  [nzLabel]="option.key"></nz-option>
@@ -114,19 +113,19 @@
   <ng-template #compTempl>
     <ng-container *ngIf="inputDefinition.type === 'string'">
 
-      <!-- <button nz-button
-              nzType="primary"
-              >
-        
-      </button> -->
       <input *ngIf="stringInputType === StringInputType.Textbox; else richTextEditorTmpl"
              nz-input
              [(ngModel)]="contentTreeItem.inputs[inputDefinition.fieldName]"
              [placeholder]="inputDefinition.fieldName"
-             nzSize="default" />
+             nzSize="default"
+             (ngModelChange)="emitContentTreeItem()" />
       <ng-template #richTextEditorTmpl>
         <quill-editor [(ngModel)]="contentTreeItem.inputs[inputDefinition.fieldName]"></quill-editor>
       </ng-template>
+    </ng-container>
+    <ng-container *ngIf="inputDefinition.type === 'experiences-input'">
+      <app-experiences-input [(ngModel)]="contentTreeItem.inputs[inputDefinition.fieldName]"
+                             (ngModelChange)="emitContentTreeItem()"></app-experiences-input>
     </ng-container>
   </ng-template>
 </ng-template>

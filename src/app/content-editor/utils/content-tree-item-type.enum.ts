@@ -3,5 +3,9 @@ export enum ContentTreeItemType {
   Heading = 'heading',
   Divider = 'divider',
   Text = 'text',
-  Icon = 'icon'
+  Icon = 'icon',
+  Header = 'header',
+  Summary = 'summary',
+  Experiences = 'experiences',
+  EducationSection = 'education'
 }

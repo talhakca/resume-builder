@@ -142,7 +142,6 @@ export class ContentTreeItemSettingsComponent implements OnInit, OnChanges {
 
   setPadding() {
     const padding = this.getNumberFromString(this.contentTreeItem.cssStyle.padding);
-    console.log(padding);
     this.padding = padding ?? 0;
   }
 

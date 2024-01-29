@@ -1,0 +1,29 @@
+<ng-container *ngIf="type === HeaderType.HeaderWithBacgkroundImage">
+  <div class="background-with-image"
+       [style.background-image]="url">
+    <div class="name-title">
+      <h1>
+        {{firstName}} {{lastName}}
+      </h1>
+    </div>
+    <div class="title">
+      <h3>
+        {{title}}
+      </h3>
+    </div>
+  </div>
+</ng-container>
+<ng-container *ngIf="type === HeaderType.SimpleHeader">
+  <div class="background">
+    <div class="name-title">
+      <h1>
+        {{firstName}} {{lastName}}
+      </h1>
+    </div>
+    <div class="title">
+      <h3>
+        {{title}}
+      </h3>
+    </div>
+  </div>
+</ng-container>

@@ -203,7 +203,8 @@ export class ContentEditorComponent implements OnInit, AfterViewInit, OnDestroy 
       type: ContentTreeItemType.Container,
       cssStyle: { ...this.defaultCssStyle }
     };
-    this.contentTree.push(defaultContainer);
+    console.log(defaultContainer)
+    this.contentTree.push({ ...defaultContainer });
     this.addComponentOrContainerModalVisibility = false;
   }
 
@@ -283,6 +284,7 @@ export class ContentEditorComponent implements OnInit, AfterViewInit, OnDestroy 
     if (this.activeContentTreeItem.type !== ContentTreeItemType.Container) {
       const updatedComponent = this.addedComponents.find(component => component.id === this.activeContentTreeItem.id);
       Object.entries(this.activeContentTreeItem.inputs).forEach(([key, value]) => {
+        console.log(key, value)
         updatedComponent.componentRef.instance[key] = value;
       });
     } else {
@@ -306,6 +308,19 @@ export class ContentEditorComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   deleteContainer(contentId: string) {
-    this.contentTree = this.contentTree.filter(item => item.id !== contentId);
+    if (contentId !== '0') {
+
+      this.contentTree = this.contentTree.filter(item => item.id !== contentId);
+    } else {
+      this.contentTree = [this.contentTree.find(item => item.id === '0')];
+    }
+  }
+
+  saveContentTree() {
+    const updatedContentTreeDefinition = {
+      ...this.activeContentTree,
+      contentTree: this.contentTree
+    };
+    this.lsService.saveContentTree(updatedContentTreeDefinition);
   }
 }

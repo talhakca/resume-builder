@@ -1,0 +1,89 @@
+<form nz-form
+      [formGroup]="experiencesForm"
+      nzLayout="vertical">
+  <ng-container formArrayName="experiences">
+
+    <div class="add-button">
+      <button nz-button
+              (click)="onAddNewExperienceClicked()">Add Experience</button>
+    </div>
+    <nz-collapse nzAccordion>
+      <ng-container *ngFor="let experience of experiences.controls; let i=index ">
+        <nz-collapse-panel [ngClass]="experience.hasError('required') ? 'error-panel' :''"
+                           [nzHeader]="headerTmpl">
+          <ng-template #headerTmpl>
+            <div class="header-container">
+              <div class="title">
+                {{getPanelName(experience)}}
+              </div>
+              <div class="delete-button">
+                <button nz-button
+                        (click)="remove(i)">Delete</button>
+              </div>
+            </div>
+          </ng-template>
+          <div [formGroupName]="i">
+            <nz-form-item>
+              <nz-form-label [nzXs]="24">
+                Title
+              </nz-form-label>
+              <nz-form-control nzErrorTip="Please input your Title">
+                <input type="text"
+                       nz-input
+                       formControlName="title" />
+              </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+              <nz-form-label [nzXs]="24">
+                Company
+              </nz-form-label>
+              <nz-form-control nzErrorTip="Please input your Company Name">
+                <input type="text"
+                       nz-input
+                       formControlName="company" />
+              </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+              <nz-form-label [nzXs]="24">
+                Location
+              </nz-form-label>
+              <nz-form-control nzErrorTip="Please input your Location">
+                <input type="text"
+                       nz-input
+                       formControlName="location" />
+              </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+              <nz-form-label [nzXs]="24">
+                Start Date
+              </nz-form-label>
+              <nz-form-control nzErrorTip="Please select your start date.">
+                <nz-date-picker formControlName="startDate"></nz-date-picker>
+              </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+              <nz-form-label [nzXs]="24">
+                End Date
+              </nz-form-label>
+              <nz-form-control>
+                <nz-date-picker formControlName="endDate"></nz-date-picker>
+              </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+              <nz-form-label [nzXs]="24">
+                Description
+              </nz-form-label>
+              <nz-form-control>
+                <quill-editor formControlName="description"></quill-editor>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+        </nz-collapse-panel>
+      </ng-container>
+    </nz-collapse>
+    <div class="submit-button">
+      <button nz-button
+              (click)="saveForm()">Save Experiences</button>
+    </div>
+  </ng-container>
+</form>

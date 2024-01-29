@@ -1,0 +1,24 @@
+.background-with-image {
+  background-size: cover;
+  background-position: center;
+  transform: scale(1);
+  width: 100%;
+  height: var(--header-height);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--header-background);
+  flex-direction: column;
+}
+
+.header-container {
+  width: 100%;
+}
+
+::ng-deep h1 {
+  color: var(primary-text-color);
+}
+
+h3 {
+  color: var(--secondary-text-color);
+}

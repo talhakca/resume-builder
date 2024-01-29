@@ -38,6 +38,11 @@
   border: 1px solid blue;
 }
 
+.info-bar {
+  display: flex;
+  justify-content: space-between;
+}
+
 
 .rendered-content-tree {
   height: 1123px !important;
@@ -60,7 +65,7 @@
 
 .component-container {
   border: var(--component-container-border);
-  // height: 100%;
+  width: 100%;
 }
 
 .hover {

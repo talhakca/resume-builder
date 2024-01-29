@@ -1,5 +1,12 @@
-To enable or disable edit mode, you can simply click CTRL.
-{{contentTree | json}}
+<div class="info-bar">
+  <div class="information">
+    To enable or disable edit mode, you can simply click CTRL.
+  </div>
+  <div class="save-button">
+    <button nz-button
+            (click)="saveContentTree()">Save Content Tree</button>
+  </div>
+</div>
 <ng-container *ngIf="mainContentTree">
   <!-- Main layout -->
   <div class="layout">
@@ -41,8 +48,7 @@ To enable or disable edit mode, you can simply click CTRL.
           Add
         </a>
       </div>
-      <div *ngIf="content.id !== '0'"
-           class="toolbar-button">
+      <div class="toolbar-button">
         <a (click)="deleteContainer(content.id)">
           Delete
         </a>

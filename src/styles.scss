@@ -44,7 +44,12 @@
 
   // Header Section
   --header-background: #d4e8ff;
-  --header-text-color: #fff;
+  --header-text-color: #black;
+  --header-height: 100px;
+  --header-title-color: rgb(255, 145, 0);
+
+  --primary-text-color: black;
+  --secondary-text-color: rgb(255, 145, 0);
 
   // Footer
   --footer-background: #0f1f3d;
@@ -70,6 +75,9 @@
   --hover-border: 2px solid rgb(234, 183, 17);
   --active-border: 1px solid blue;
   --pdf-background: #fff;
+
+
+  --h1-font-size: 400;
 }
 
 section,
@@ -117,7 +125,15 @@ h6 {
   margin: 0px !important;
 }
 
+h1 {
+  font-size: var(--h1-font-size);
+}
+
 .ql-editor {
   padding: 0px !important;
   overflow: hidden;
+}
+
+.ant-divider-horizontal {
+  margin: 5px 0px;
 }

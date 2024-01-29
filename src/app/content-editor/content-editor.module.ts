@@ -4,7 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { MatStepperModule } from '@angular/material/stepper';
 import { NzLayoutModule } from 'ng-zorro-antd/layout';
 import { ContentEditorComponent } from './content-editor/content-editor.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
 import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
@@ -19,7 +19,13 @@ import { NzSliderModule } from 'ng-zorro-antd/slider';
 import { QuillModule } from 'ngx-quill'
 import { NzRadioModule } from 'ng-zorro-antd/radio';
 import { ColorPickerModule } from 'ngx-color-picker';
-import { NzInputNumberModule } from 'ng-zorro-antd/input-number'
+import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
+import { NzFormModule } from 'ng-zorro-antd/form';
+import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
+import { ExperiencesInputComponent } from './experiences-input/experiences-input.component';
+import { NzCollapseModule } from 'ng-zorro-antd/collapse';
+import { EducationInputComponent } from './education-input/education-input.component';
+
 const routes: Routes = [
   {
     path: '',
@@ -32,6 +38,8 @@ const routes: Routes = [
   declarations: [
     ContentEditorComponent,
     ContentTreeItemSettingsComponent,
+    ExperiencesInputComponent,
+    EducationInputComponent,
   ],
   imports: [
     CommonModule,
@@ -52,7 +60,11 @@ const routes: Routes = [
     QuillModule,
     NzRadioModule,
     ColorPickerModule,
-    NzInputNumberModule
+    NzInputNumberModule,
+    ReactiveFormsModule,
+    NzFormModule,
+    NzDatePickerModule,
+    NzCollapseModule
   ]
 })
 export class ContentEditorModule { }
