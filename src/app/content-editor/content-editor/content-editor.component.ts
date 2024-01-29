@@ -8,6 +8,8 @@ import { Subscription } from 'rxjs';
 import { LocalStorageService } from 'src/app/services/local-storage-service/local-storage.service';
 import { ContentTreeDefinition } from 'src/app/layout-crud/select-layout/utils/content-tree-definition.interface';
 import { KeyValue } from '@angular/common';
+import * as jspdf from 'jspdf';
+import html2canvas from 'html2canvas';
 
 @Component({
   selector: 'app-content-editor',
@@ -322,5 +324,23 @@ export class ContentEditorComponent implements OnInit, AfterViewInit, OnDestroy 
       contentTree: this.contentTree
     };
     this.lsService.saveContentTree(updatedContentTreeDefinition);
+  }
+
+  saveAsPDF() {
+    const data = document.getElementById('rendered-content-tree') as HTMLElement;
+    if (data) {
+      this.editMode = false;
+      html2canvas(data).then(canvas => {
+        // Few necessary setting options
+        var imgWidth = 208;
+        var imgHeight = canvas.height * imgWidth / canvas.width;
+
+        const contentDataURL = canvas.toDataURL('image/png')
+        let pdf = new jspdf.jsPDF('p', 'mm', 'a4'); // A4 size page of PDF
+        var position = 0;
+        pdf.addImage(contentDataURL, 'PNG', 0, position, imgWidth, imgHeight)
+        pdf.save('resume.pdf'); // Generated PDF
+      });
+    }
   }
 }

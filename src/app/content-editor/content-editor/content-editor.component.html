@@ -5,13 +5,16 @@
   <div class="save-button">
     <button nz-button
             (click)="saveContentTree()">Save Content Tree</button>
+    <button nz-button
+            (click)="saveAsPDF()">Save As PDF</button>
   </div>
 </div>
 <ng-container *ngIf="mainContentTree">
   <!-- Main layout -->
   <div class="layout">
     <div class="content-tree-layout">
-      <div class="rendered-content-tree">
+      <div class="rendered-content-tree"
+           [id]="'rendered-content-tree'">
         <ng-container *ngTemplateOutlet="
                          layoutTemplate;
                          context: { content: mainContentTree,hasChildren:hasChildren(this.mainContentTree.id) }">
