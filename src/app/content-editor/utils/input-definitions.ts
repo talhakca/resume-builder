@@ -1,10 +1,8 @@
-import { HeadingType } from "projects/component-library/src/lib/shared/enums/heading-type.enum";
-import { ContentTreeItemType } from "./content-tree-item-type.enum";
-import { DividerOrientation } from "projects/component-library/src/lib/shared/enums/divider-orientation.enum";
-import { IconTheme } from "projects/component-library/src/lib/shared/enums/icon-theme.enum";
-import { HeaderType } from "projects/component-library/src/lib/shared/enums/header-type.enum";
-import { Resume } from "./resume.interface";
-import { HeaderData } from "projects/component-library/src/lib/shared/interfaces/header-data.interface";
+import { HeadingType } from 'projects/component-library/src/lib/shared/enums/heading-type.enum';
+import { ContentTreeItemType } from './content-tree-item-type.enum';
+import { DividerOrientation } from 'projects/component-library/src/lib/shared/enums/divider-orientation.enum';
+import { IconTheme } from 'projects/component-library/src/lib/shared/enums/icon-theme.enum';
+import { HeaderType } from 'projects/component-library/src/lib/shared/enums/header-type.enum';
 
 export const inputDefinitions = [
   {
