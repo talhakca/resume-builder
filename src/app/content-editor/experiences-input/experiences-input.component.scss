@@ -1,0 +1,15 @@
+.form-group-toolbar {
+  display: flex;
+  justify-content: space-between;
+}
+
+.error-panel {
+  box-sizing: border-box;
+  border: 1px solid red;
+}
+
+.header-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}

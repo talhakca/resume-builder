@@ -1,0 +1,44 @@
+<div class="section">
+  <form nz-form
+        [formGroup]="createTemplateForm"
+        class="create-template"
+        nzLayout="vertical"
+        (ngSubmit)="createTemplate()">
+    <nz-form-item>
+      <nz-form-label [nzXs]="24">
+        Template Name
+      </nz-form-label>
+      <nz-form-control nzErrorTip="Please input your template name!">
+        <input type="text"
+               nz-input
+               formControlName="label"
+               placeholder="name" />
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzXs]="24">
+        Template
+      </nz-form-label>
+      <nz-form-control nzErrorTip="Please input your template name!">
+        <nz-select formControlName="templateId">
+          <nz-option *ngFor="let contentTreeTemplate of predefinedTemplates"
+                     [nzValue]="contentTreeTemplate.id"
+                     [nzLabel]="contentTreeTemplate.label"></nz-option>
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzXs]="24">
+        Description
+      </nz-form-label>
+      <nz-form-control nzErrorTip="Please input your description">
+        <textarea formControlName="description"
+                  nz-input
+                  rows="2"
+                  placeholder="Template description"></textarea>
+      </nz-form-control>
+    </nz-form-item>
+    <button nz-button
+            [nzType]="'primary'">Create</button>
+  </form>
+</div>

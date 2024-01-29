@@ -1,0 +1,41 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: var(--header-height);
+  padding: 0 200px 0 200px;
+  background: var(--header-background);
+  position: sticky;
+  top: 0;
+  /* Stick the navbar to the top of the viewport */
+  z-index: 100;
+
+  .image {
+    img {
+      width: 60px;
+      height: 80px;
+    }
+
+    display: flex;
+    align-items: center;
+  }
+}
+
+.content-area {
+  height: var(--content-height);
+  padding: 0 200px 0 200px;
+  background: var(--body-background);
+  overflow-y: scroll;
+}
+
+.app-area {}
+
+.footer {
+  background: var(--footer-background);
+  color: var(--footer-text-color);
+  height: var(--footer-height);
+}
+
+.image {
+  cursor: pointer;
+}

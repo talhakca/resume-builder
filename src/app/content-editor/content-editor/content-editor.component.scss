@@ -1,0 +1,79 @@
+.empty-container {
+  justify-content: center !important;
+  align-items: center !important;
+  display: flex !important;
+  width: 100%;
+}
+
+.layout {
+  display: flex;
+  justify-content: space-between;
+}
+
+.container {
+  border: var(--container-border);
+  position: relative;
+  display: flex !important;
+  flex-wrap: nowrap;
+  overflow: hidden;
+}
+
+.toolbar {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  display: flex;
+  justify-content: space-between;
+  box-sizing: border-box;
+  width: 100%;
+  z-index: 999;
+  cursor: pointer;
+}
+
+.toolbar-button {
+  width: 60px;
+  text-align: center;
+  background: var(--body-background-color);
+  color: blue;
+  border: 1px solid blue;
+}
+
+.info-bar {
+  display: flex;
+  justify-content: space-between;
+}
+
+
+.rendered-content-tree {
+  height: 1123px !important;
+  width: 794px !important;
+  background: var(--pdf-background);
+}
+
+.settings {
+  width: 30%;
+}
+
+.filled-container {
+  padding: var(--filled-container-padding);
+}
+
+.error {
+  font-size: small;
+  color: red;
+}
+
+.component-container {
+  border: var(--component-container-border);
+  width: 100%;
+}
+
+.hover {
+  border: var(--hover-border) !important;
+  box-sizing: border-box;
+}
+
+.active {
+  border: var(--active-border) !important;
+  box-sizing: border-box;
+}

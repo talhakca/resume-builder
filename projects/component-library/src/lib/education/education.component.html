@@ -1,0 +1,18 @@
+<div class="education-area">
+  <div class="title-area">
+    <div class="title">
+      <h3 [innerHTML]="degree"></h3>
+    </div>
+    <div class="information">
+      {{startDate | date: "YYYY"}} - {{endDate | date: "YYYY"}}
+    </div>
+  </div>
+  <div class="title-area">
+    <div class="subtitle">
+      <h3 [innerHTML]="school"></h3>
+    </div>
+    <div class="information">
+      <span [innerHTML]="location"></span>
+    </div>
+  </div>
+</div>

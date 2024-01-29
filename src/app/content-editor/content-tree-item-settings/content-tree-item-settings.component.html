@@ -1,0 +1,131 @@
+<div class="component-wrapper">
+  <section *ngIf="activeInputDefinition && contentTreeItem.type !== ContentTreeItemType.Container"
+           class="form-area">
+
+    <div *ngFor="let inputDefinition of activeInputDefinition.inputs"
+         class="form-item">
+      <ng-container *ngTemplateOutlet="
+         inputTmpl;
+         context: { inputDefinition }">
+      </ng-container>
+    </div>
+
+  </section>
+  <section *ngIf="contentTreeItem.type === ContentTreeItemType.Container">
+    <div *ngIf="contentTreeItem.id !== '0'"
+         class="width">
+      <div class="title">
+        Width
+      </div>
+      <div class="form-item">
+        <nz-slider [(ngModel)]="width"
+                   [nzMin]="0"
+                   [nzMax]="100"
+                   [nzStep]="5"
+                   (ngModelChange)="onWidthChange()"></nz-slider>
+      </div>
+    </div>
+    <div *ngIf="contentTreeItem.id !== '0'"
+         class="width">
+      <div class="title">
+        Height
+      </div>
+      <div class="form-item">
+        <nz-slider [(ngModel)]="height"
+                   [nzMin]="0"
+                   [nzMax]="100"
+                   [nzStep]="5"
+                   (ngModelChange)="onHeightChange()"></nz-slider>
+      </div>
+    </div>
+    <div *ngFor="let cssOption of cssOptions"
+         class="alignment">
+      <div class="title">
+        {{cssOption.key}}
+      </div>
+      <div class="options">
+        <ng-container>
+          <ng-container *ngFor="let option of cssOption.value">
+            <nz-radio-group [(ngModel)]="contentTreeItem.cssStyle[cssOption.fieldName]"
+                            (ngModelChange)="emitContentTreeItem()">
+              <label nz-radio-button
+                     [nzValue]="option.value">
+                <span nz-icon
+                      [nzType]="option.icon"
+                      nzTheme="outline"></span>
+              </label>
+
+            </nz-radio-group>
+          </ng-container>
+        </ng-container>
+      </div>
+    </div>
+    <div class="background-color">
+      <div class="title">
+        Background Color
+      </div>
+      <div class="options">
+        <input [(colorPicker)]="contentTreeItem.cssStyle.background"
+               placeholder="Click to change color"
+               (colorPickerChange)="emitContentTreeItem()" />
+      </div>
+    </div>
+    <div class="color">
+      <div class="title">
+        Padding
+      </div>
+      <div class="options">
+        <nz-input-number [(ngModel)]="padding"
+                         [nzMin]="0"
+                         (ngModelChange)="onPaddingChange()"></nz-input-number>
+      </div>
+    </div>
+  </section>
+</div>
+
+<ng-template #inputTmpl
+             let-inputDefinition="inputDefinition">
+  <div class="label">
+    <div class="label-title">
+      {{inputDefinition.fieldName}}
+    </div>
+    <div *ngIf="inputDefinition.allowHTMLEdit !== false"
+         class="action-button">
+      <a (click)="changeStringInputType()">
+        <ng-container *ngIf="stringInputType === StringInputType.Textbox; else editAsTextTmpl">
+          Edit As Html
+        </ng-container>
+        <ng-template #editAsTextTmpl>
+          Edit As Text
+        </ng-template>
+      </a>
+    </div>
+  </div>
+  <ng-container *ngIf="inputDefinition.type === 'enum'; else compTempl">
+    <nz-select [(ngModel)]="contentTreeItem.inputs[inputDefinition.fieldName]"
+               (ngModelChange)="emitContentTreeItem()">
+      <nz-option *ngFor="let option of getOptionsFromEnum(inputDefinition.enum)"
+                 [nzValue]="option.value"
+                 [nzLabel]="option.key"></nz-option>
+
+    </nz-select>
+  </ng-container>
+  <ng-template #compTempl>
+    <ng-container *ngIf="inputDefinition.type === 'string'">
+
+      <input *ngIf="stringInputType === StringInputType.Textbox; else richTextEditorTmpl"
+             nz-input
+             [(ngModel)]="contentTreeItem.inputs[inputDefinition.fieldName]"
+             [placeholder]="inputDefinition.fieldName"
+             nzSize="default"
+             (ngModelChange)="emitContentTreeItem()" />
+      <ng-template #richTextEditorTmpl>
+        <quill-editor [(ngModel)]="contentTreeItem.inputs[inputDefinition.fieldName]"></quill-editor>
+      </ng-template>
+    </ng-container>
+    <ng-container *ngIf="inputDefinition.type === 'experiences-input'">
+      <app-experiences-input [(ngModel)]="contentTreeItem.inputs[inputDefinition.fieldName]"
+                             (ngModelChange)="emitContentTreeItem()"></app-experiences-input>
+    </ng-container>
+  </ng-template>
+</ng-template>

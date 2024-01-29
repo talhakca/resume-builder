@@ -1,0 +1,56 @@
+<form nz-form
+      [formGroup]="educationForm"
+      class="create-template"
+      nzLayout="vertical">
+  <nz-form-item>
+    <nz-form-label [nzXs]="24">
+      Major
+    </nz-form-label>
+    <nz-form-control nzErrorTip="Please input your Major">
+      <input type="text"
+             nz-input
+             formControlName="major"
+             (ngModelChange)="emitValue()" />
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label [nzXs]="24">
+      School
+    </nz-form-label>
+    <nz-form-control nzErrorTip="Please input your School Name">
+      <input type="text"
+             nz-input
+             formControlName="School"
+             (ngModelChange)="emitValue()" />
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label [nzXs]="24">
+      Location
+    </nz-form-label>
+    <nz-form-control nzErrorTip="Please input your Location">
+      <input type="text"
+             nz-input
+             formControlName="location"
+             (ngModelChange)="emitValue()" />
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label [nzXs]="24">
+      Start Date
+    </nz-form-label>
+    <nz-form-control nzErrorTip="Please select your start date.">
+      <nz-date-picker formControlName="startDate"
+                      (ngModelChange)="emitValue()"></nz-date-picker>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label [nzXs]="24">
+      End Date
+    </nz-form-label>
+    <nz-form-control>
+      <nz-date-picker formControlName="endDate"
+                      (ngModelChange)="emitValue()"></nz-date-picker>
+    </nz-form-control>
+  </nz-form-item>
+</form>

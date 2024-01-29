@@ -1,0 +1,23 @@
+<div class="container-area">
+  <div class="title-area">
+    <div class="title">
+      <h3 [innerHTML]="title"></h3>
+    </div>
+    <div class="information">
+      {{startDate | date}} - {{endDate | date}}
+    </div>
+  </div>
+  <div class="title-area">
+    <div class="subtitle">
+      <h3 [innerHTML]="company"></h3>
+    </div>
+    <div class="information">
+      <span [innerHTML]="location"></span>
+    </div>
+  </div>
+  <div class="content-area">
+    <div class="experience-summary">
+      <lib-text [text]="description"></lib-text>
+    </div>
+  </div>
+</div>
