@@ -41,8 +41,7 @@
   - ngx-colorpicker ( UI Component, to be able to change the background color and for feature theme editor)
   - uuid (to add unique identifier to content tree definition)
 
-  ## Final Thoughts
-  Eventhough this test isn't fully succeed, it was very fun to build this module. For sure, I'll add the missing functionalities to this and add this to my portfolio. Thank you everyone for taking time for the whole interview process. It was very nice to meet you all. I hope we'll see each other in the future.
+
 
 
 
